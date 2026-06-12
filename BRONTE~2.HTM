@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bron Technologies</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #0f0f0f;
+    --card: #141414;
+    --border: #1e1e1e;
+    --white: #f0ede8;
+    --muted: #777;
+    --accent: #d4f53c;
+    --accent-glow: rgba(212, 245, 60, 0.10);
+    --accent-border: rgba(212, 245, 60, 0.35);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 28px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, border-color 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.95);
+    backdrop-filter: blur(20px);
+    border-color: var(--border);
+  }
+  .logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-story {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    font-weight: 500;
+  }
+  .nav-story:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .nav-contact {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    padding: 10px 22px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+    border: 1px solid transparent;
+  }
+  .nav-contact:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 56px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute;
+    top: 42%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(212,245,60,0.055) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 36px;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.65s both;
+  }
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(88px, 14vw, 172px);
+    line-height: 0.88;
+    letter-spacing: 0.015em;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.8s both;
+  }
+  .hero-headline .fill  { color: var(--white); display: block; }
+  .hero-headline .stroke {
+    -webkit-text-stroke: 1.5px rgba(240,237,232,0.35);
+    color: transparent;
+    display: block;
+  }
+  .hero-headline .dot { color: var(--accent); }
+  .hero-wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(14px, 2vw, 24px);
+    letter-spacing: 0.55em;
+    color: rgba(240,237,232,0.55);
+    margin-top: 14px; margin-bottom: 48px;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.95s both;
+    text-transform: uppercase;
+  }
+  .hero-desc {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(240,237,232,0.6);
+    max-width: 480px;
+    line-height: 1.85;
+    margin: 0 auto 64px;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.1s both;
+  }
+
+  /* SERVICE TABS — 2x2 grid */
+  .service-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 260px);
+    grid-template-rows: repeat(2, 200px);
+    gap: 16px;
+    justify-content: center;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.28s both;
+  }
+
+  .tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    text-align: left;
+  }
+  .tab.live { border-color: var(--accent-border); cursor: pointer; }
+  .tab.live::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--accent-glow);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .tab.live:hover::before { opacity: 1; }
+  .tab.live:hover { transform: translateY(-5px); border-color: var(--accent); }
+  .tab.live::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent);
+    transition: width 0.45s ease;
+  }
+  .tab.live:hover::after { width: 100%; }
+  .tab.live .tab-edge {
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .tab.underway { border-color: #333; cursor: default; opacity: 0.75; }
+  .tab.underway .tab-name { color: var(--white); }
+  .tab.underway .tab-desc { color: rgba(240,237,232,0.45); }
+  .tab.smartrecall {
+    border-color: #2a3d2a; cursor: default; opacity: 0.82; background: #0f1410;
+  }
+  .tab.smartrecall::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 70%, rgba(80,200,80,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tab.smartrecall .tab-badge { border: 1px solid #2e522e; color: #6aaa6a; }
+  .tab.smartrecall .tab-name  { color: #d8f0d8; }
+  .tab.smartrecall .tab-desc  { color: rgba(180,230,180,0.55); }
+  .tab.applications {
+    border-color: #2a2540; cursor: default; opacity: 0.82; background: #100f18;
+  }
+  .tab.applications::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 70%, rgba(120,80,220,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tab.applications .tab-badge { border: 1px solid #3d2e6a; color: #8878cc; }
+  .tab.applications .tab-name  { color: #e0dcff; }
+  .tab.applications .tab-desc  { color: rgba(200,190,255,0.5); }
+
+  .tab-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+  }
+  .tab.live .tab-badge { background: var(--accent); color: var(--black); font-weight: 500; }
+  .tab.underway .tab-badge { border: 1px solid #444; color: #888; }
+  .tab-icon { position: absolute; top: 18px; left: 22px; font-size: 22px; line-height: 1; opacity: 0.85; }
+  .tab-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 7px;
+    position: relative; z-index: 2;
+  }
+  .tab-name .reg { font-size: 13px; vertical-align: super; letter-spacing: 0; }
+  .tab-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.55;
+    position: relative; z-index: 2;
+  }
+  .tab.live .tab-desc { color: rgba(212,245,60,0.5); }
+  .tab-arrow {
+    position: absolute;
+    bottom: 20px; right: 20px;
+    width: 28px; height: 28px;
+    border: 1px solid rgba(212,245,60,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--accent);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    z-index: 2;
+  }
+  .tab.live:hover .tab-arrow {
+    background: var(--accent);
+    color: var(--black);
+    border-color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  /* OUR STORY BUTTON — below tabs */
+  .story-trigger-wrap {
+    position: relative; z-index: 2;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.45s both;
+  }
+  .story-trigger {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 13px 32px;
+    cursor: pointer;
+    transition: border-color 0.25s, color 0.25s, background 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .story-trigger:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .story-trigger::before { content: '✦'; font-size: 9px; }
+
+  /* SCROLL HINT */
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.65s both;
+  }
+  .scroll-hint span {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #333;
+  }
+  .scroll-line {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, #333, transparent);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.25; }
+    50%      { opacity: 0.9; }
+  }
+
+  /* ── OUR STORY MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 5, 8, 0.92);
+    backdrop-filter: blur(16px);
+    z-index: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    max-width: 680px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(24px);
+    transition: transform 0.4s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .modal-overlay.open .modal {
+    transform: translateY(0);
+  }
+
+  /* accent top bar */
+  .modal-top-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), rgba(212,245,60,0.2));
+  }
+
+  .modal-header {
+    padding: 36px 40px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .modal-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: var(--accent);
+  }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--white);
+  }
+  .modal-title span { color: var(--accent); }
+
+  .modal-close {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s, color 0.2s;
+    margin-left: 24px;
+    margin-top: 4px;
+  }
+  .modal-close:hover { border-color: var(--white); color: var(--white); }
+
+  .modal-body {
+    padding: 36px 40px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .modal-block { }
+  .modal-block-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+  .modal-block p {
+    font-size: 15px;
+    font-weight: 400;
+    color: #888;
+    line-height: 1.85;
+  }
+  .modal-block p strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .modal-divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  .modal-values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .modal-value {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+  }
+  .modal-value-icon { font-size: 18px; margin-bottom: 10px; display: block; }
+  .modal-value-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .modal-value-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .modal-footer {
+    padding: 20px 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-footer-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .modal-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    padding: 10px 22px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .modal-cta:hover { opacity: 0.85; }
+
+  /* STATS */
+  .stats {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--dark);
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    padding: 56px;
+  }
+  .stat-div { background: var(--border); }
+  .stat-item { text-align: center; padding: 0 40px; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.5);
+  }
+
+  /* TAGLINE */
+  .tagline { padding: 120px 56px; max-width: 1000px; margin: 0 auto; }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+  .tagline-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 5.5vw, 76px);
+    line-height: 1.06;
+    letter-spacing: 0.02em;
+  }
+  .tagline-text .dim    { color: var(--muted); }
+  .tagline-text .bright { color: var(--white); }
+  .tagline-text .hi     { color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    background: var(--dark);
+    padding: 36px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 0.14em; color: var(--white); }
+  .footer-logo em { color: var(--accent); font-style: normal; }
+  .footer-copy { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: rgba(240,237,232,0.45); }
+  .footer-service-area {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.45);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer-service-area::before { content: '◎'; color: var(--accent); font-size: 8px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ── CINEMATIC INTRO ── */
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: #080808;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(0);
+    transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .intro.exit { transform: translateY(-100%); }
+
+  .intro-inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Scanning line that sweeps down before reveal */
+  .intro-scan {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    animation: iScan 1.2s ease 0.05s both;
+    pointer-events: none;
+  }
+  @keyframes iScan {
+    0%   { top: 0%;    opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.15; }
+    100% { top: 100%;  opacity: 0; }
+  }
+
+  .intro-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: rgba(212,245,60,0.45);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: iUp 0.6s ease 0.15s both;
+  }
+
+  .intro-wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(90px, 15vw, 180px);
+    letter-spacing: 0.06em;
+    color: #f0ede8;
+    line-height: 0.9;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: iUpBig 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+  }
+  .intro-wordmark .accent-dot { color: #d4f53c; }
+
+  .intro-rule {
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4f53c, transparent);
+    margin: 28px 0 20px;
+    animation: iRule 0.7s ease 0.75s both;
+  }
+
+  .intro-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(9px, 1.1vw, 12px);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.35);
+    opacity: 0;
+    animation: iUp 0.6s ease 0.55s both;
+  }
+
+  /* Bottom status bar */
+  .intro-status {
+    position: absolute;
+    bottom: 40px;
+    left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    animation: iUp 0.5s ease 0.8s both;
+    cursor: pointer;
+  }
+  .intro-status-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #d4f53c;
+    animation: iPulse 1.2s ease-in-out 0.9s infinite;
+  }
+  .intro-status-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(212,245,60,0.4);
+  }
+  .intro-enter {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.2);
+    animation: iEnterPulse 1.8s ease-in-out 1.2s infinite;
+  }
+  @keyframes iEnterPulse {
+    0%, 100% { opacity: 0.2; }
+    50%       { opacity: 0.6; }
+  }
+
+  @keyframes iUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes iUpBig {
+    from { opacity: 0; transform: translateY(50px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes iRule {
+    from { width: 0; }
+    to   { width: min(280px, 40vw); }
+  }
+  @keyframes iPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.5); }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-story { display: none; }
+    .hero { padding: 100px 24px 100px; }
+    .hero-headline { font-size: clamp(72px, 20vw, 110px); }
+    .service-tabs { grid-template-columns: 1fr; grid-template-rows: unset; width: 100%; max-width: 320px; }
+    .tab { height: 170px; }
+    .stats { grid-template-columns: 1fr; padding: 48px 24px; gap: 32px; }
+    .stat-div { display: none; }
+    .stat-item { padding: 0; }
+    .tagline { padding: 80px 24px; }
+    footer { padding: 28px 24px; flex-direction: column; gap: 14px; text-align: center; }
+    .modal { max-height: 92vh; }
+    .modal-header { padding: 28px 24px 20px; }
+    .modal-title { font-size: 40px; }
+    .modal-body { padding: 28px 24px 36px; }
+    .modal-values { grid-template-columns: 1fr; }
+    .modal-footer { padding: 16px 24px; flex-direction: column; gap: 12px; }
+    .intro-wordmark { font-size: clamp(72px, 22vw, 140px); }
+  }
+
+  /* REDACTED */
+  .redacted {
+    background: #222;
+    color: transparent;
+    border-radius: 2px;
+    position: relative;
+    display: inline-block;
+    user-select: none;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .redacted::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── CINEMATIC INTRO OVERLAY ── -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-scan"></div>
+  <div class="intro-inner">
+    <div class="intro-eyebrow">Est. 2026</div>
+    <div class="intro-wordmark">BRON<span class="accent-dot">.</span></div>
+    <div class="intro-rule"></div>
+    <div class="intro-sub">Technologies</div>
+  </div>
+  <div class="intro-status" id="introEnter">
+    <div class="intro-status-dot"></div>
+    <div class="intro-status-text">Systems Online</div>
+    <div class="intro-enter">Click to Enter</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo"><img src="data:image/png;base64,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" alt="Bron Technologies" style="height:40px;width:auto;display:block;"></a>
+  <div class="nav-right">
+    <button class="nav-story" id="storyBtn">Our Story</button>
+    <a href="bron-technologies-web.html#contact" class="nav-contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <p class="hero-eyebrow"></p>
+  <p class="hero-wordmark">A Technology Company</p>
+  <p class="hero-desc">A multi-service technology company built for real businesses. Choose a division below to get started.</p>
+
+  <div class="service-tabs">
+    <a href="bron-technologies-web.html" class="tab live" target="_blank" rel="noopener">
+      <div class="tab-edge"></div>
+      <span class="tab-badge">Available Now</span>
+      <span class="tab-icon">🖥</span>
+      <div class="tab-name">Website<br>Services</div>
+      <div class="tab-desc">Custom builds · Hosting · Maintenance</div>
+      <div class="tab-arrow">↗</div>
+    </a>
+    <div class="tab underway">
+      <span class="tab-badge">In Development</span>
+      <span class="tab-icon">🛸</span>
+      <div class="tab-name"><span class="redacted">Drone Services</span></div>
+      <div class="tab-desc">In Development</div>
+    </div>
+    <div class="tab smartrecall">
+      <span class="tab-badge">In Development</span>
+      <span class="tab-icon">🧠</span>
+      <div class="tab-name"><span class="redacted">SmartRecall®</span></div>
+      <div class="tab-desc">In Development</div>
+    </div>
+    <div class="tab applications">
+      <span class="tab-badge">In Development</span>
+      <span class="tab-icon">📱</span>
+      <div class="tab-name"><span class="redacted">Applications</span></div>
+      <div class="tab-desc">In Development</div>
+    </div>
+  </div>
+
+  <!-- OUR STORY TRIGGER -->
+  <div class="story-trigger-wrap">
+    <button class="story-trigger" id="storyBtn2">Our Story</button>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats reveal">
+  <div class="stat-item"><div class="stat-num">72h</div><div class="stat-label">Site Delivery</div></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><div class="stat-num">$0</div><div class="stat-label">Hidden Fees</div></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Service Divisions</div></div>
+</div>
+
+<!-- TAGLINE -->
+<section class="tagline">
+  <div class="section-tag">About</div>
+  <div class="tagline-text reveal">
+    <span class="dim">Built by someone</span><br>
+    <span class="bright">who knows what</span><br>
+    <span class="hi">real work looks like.</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo"><img src="data:image/png;base64,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" alt="Bron Technologies" style="height:28px;width:auto;display:block;opacity:0.7;"></div>
+  <div class="footer-copy">© 2026 Bron Technologies</div>
+  <div class="footer-service-area"></div>
+</footer>
+
+<!-- ── OUR STORY MODAL ── -->
+<div class="modal-overlay" id="storyModal">
+  <div class="modal" id="modalBox">
+    <div class="modal-top-bar"></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Our Story</div>
+        <div class="modal-title">Built From <span>Zero.</span></div>
+      </div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-block">
+        <div class="modal-block-label">Where It Started</div>
+        <p>Bron Technologies wasn't born in a boardroom. It was built by <strong>a ten-year Air Force veteran</strong> who spent a decade leading people, solving problems under pressure, and figuring out how to make things work with whatever was available. That discipline doesn't leave when the uniform comes off.</p>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-block">
+        <div class="modal-block-label">Why We Exist</div>
+        <p>Most small businesses get ignored by big agencies or overcharged by freelancers who disappear after delivery. <strong>We built Bron Technologies to fix that.</strong> Fast builds, flat rates, and someone who actually picks up the phone. No corporate runaround. No surprise invoices. Just work that gets done right.</p>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-block">
+        <div class="modal-block-label">Where We're Going</div>
+        <p>Website Services is just the beginning. We're actively building out <strong>drone services, the SmartRecall® platform, and a mobile applications division</strong> — each one designed to solve a real problem for real people. We're documenting the whole thing in real time. You're watching it get built.</p>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-block">
+        <div class="modal-block-label">What We Stand On</div>
+        <div class="modal-values">
+          <div class="modal-value">
+            <span class="modal-value-icon">⚡</span>
+            <div class="modal-value-title">Speed</div>
+            <div class="modal-value-desc">We move fast. 72-hour website delivery isn't a gimmick — it's the standard.</div>
+          </div>
+          <div class="modal-value">
+            <span class="modal-value-icon">🎯</span>
+            <div class="modal-value-title">Accountability</div>
+            <div class="modal-value-desc">We own our work. If something isn't right, we fix it. No excuses.</div>
+          </div>
+          <div class="modal-value">
+            <span class="modal-value-icon">🔒</span>
+            <div class="modal-value-title">Transparency</div>
+            <div class="modal-value-desc">Flat rates. Clear scope. You always know exactly what you're paying for.</div>
+          </div>
+          <div class="modal-value">
+            <span class="modal-value-icon">📈</span>
+            <div class="modal-value-title">Growth</div>
+            <div class="modal-value-desc">We build for where your business is going, not just where it is today.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="modal-footer-tag">Bron Technologies — Est. 2026</div>
+      <a href="bron-technologies-web.html#contact" class="modal-cta">Work With Us</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── INTRO AUDIO ─────────────────────────────────────────────────
+  function playIntroSound() {
+    try {
+      var audio = new Audio('intro_sound.wav');
+      audio.volume = 0.32;
+      audio.play().catch(function() {});
+    } catch(e) {}
+  }
+
+  // ── INTRO SEQUENCE ──────────────────────────────────────────────
+  (function() {
+    document.body.style.overflow = 'hidden';
+
+    var intro   = document.getElementById('intro');
+    var entered = false;
+
+    function enter() {
+      if (entered) return;
+      entered = true;
+
+      // Sound plays HERE — inside a user gesture, so browser allows it
+      playIntroSound();
+
+      // Lift the curtain
+      intro.classList.add('exit');
+      setTimeout(function() {
+        document.body.style.overflow = '';
+        intro.style.display = 'none';
+      }, 1050);
+    }
+
+    // Click or keypress triggers entry
+    intro.addEventListener('click', enter);
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Escape') enter();
+    });
+  })();
+
+  // ── NAV SCROLL ──────────────────────────────────────────────────
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // ── SCROLL REVEAL ───────────────────────────────────────────────
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) e.target.classList.add('in');
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
+
+  // ── MODAL ───────────────────────────────────────────────────────
+  var modal    = document.getElementById('storyModal');
+  var openBtns = [document.getElementById('storyBtn'), document.getElementById('storyBtn2')];
+  var closeBtn = document.getElementById('modalClose');
+
+  function openModal()  { modal.classList.add('open');    document.body.style.overflow = 'hidden'; }
+  function closeModal() { modal.classList.remove('open'); document.body.style.overflow = '';       }
+
+  openBtns.forEach(function(btn) { btn.addEventListener('click', openModal); });
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
