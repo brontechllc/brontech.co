@@ -505,6 +505,24 @@ function renderQuestion(q) {
   return block;
 }
 
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xojrnjwv';
+
+async function submitAnswers() {
+  const payload = {};
+  Object.keys(answers).forEach(k => {
+    const v = answers[k];
+    payload[k] = Array.isArray(v) ? v.join(', ') : v;
+  });
+  payload._subject = `New Client Questionnaire — ${answers.businessName || 'Unknown Business'}`;
+
+  const res = await fetch(FORMSPREE_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error('Submission failed');
+}
+
 function renderSuccess() {
   const services = answers.servicesWanted || [];
   const budget = answers.monthlyBudget || 'TBD';
@@ -554,10 +572,21 @@ function renderSuccess() {
 document.getElementById('backBtn').addEventListener('click', () => {
   if (step > 0) { step -= 1; renderStep(); }
 });
-document.getElementById('nextBtn').addEventListener('click', () => {
+document.getElementById('nextBtn').addEventListener('click', async () => {
   if (!canProceed()) return;
-  if (step < STEPS.length - 1) { step += 1; renderStep(); }
-  else { renderSuccess(); }
+  if (step < STEPS.length - 1) { step += 1; renderStep(); return; }
+
+  const btn = document.getElementById('nextBtn');
+  btn.disabled = true;
+  btn.textContent = 'SENDING...';
+  try {
+    await submitAnswers();
+    renderSuccess();
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'SUBMIT ›';
+    alert('Something went wrong sending your answers. Please try again or email us directly.');
+  }
 });
 
 renderStep();
